@@ -177,9 +177,17 @@ const MIME = { '.html': 'text/html', '.css': 'text/css', '.js': 'application/jav
 
 function serveFile(res, file) {
   const ext = path.extname(file).toLowerCase();
-  res.writeHead(200, { 'Content-Type': MIME[ext] || 'application/octet-stream', 'Access-Control-Allow-Origin': '*' });
   fs.readFile(path.join(PUBLIC_DIR, file), (err, data) => {
-    if (err) { res.writeHead(404); return res.end('Not found'); }
+    if (err) {
+      const missing = ['ENOENT', 'EISDIR', 'ENOTDIR'].includes(err.code);
+      res.writeHead(missing ? 404 : 500);
+      return res.end(missing ? 'Not found' : 'Unable to serve file');
+    }
+
+    res.writeHead(200, {
+      'Content-Type': MIME[ext] || 'application/octet-stream',
+      'Access-Control-Allow-Origin': '*'
+    });
     res.end(data);
   });
 }
@@ -199,18 +207,26 @@ const server = http.createServer((req, res) => {
 
   if (req.method === 'OPTIONS') { res.writeHead(204, { 'Access-Control-Allow-Origin': '*', 'Access-Control-Allow-Headers': 'Content-Type', 'Access-Control-Allow-Methods': 'GET,POST,OPTIONS' }); return res.end(); }
 
-  if (req.method === 'GET') {
-    if (pathname === '/') return serveFile(res, 'index.html');
-    if (pathname === '/style.css') return serveFile(res, 'style.css');
-    if (pathname === '/game.js') return serveFile(res, 'game.js');
-    if (pathname === '/webhook.html') return serveFile(res, 'webhook.html');
-    if (pathname.startsWith('/api/')) return handleApi(res, pathname, req);
-    if (pathname.startsWith('/')) return serveFile(res, pathname.slice(1));
-    if (pathname.startsWith('/')) return serveFile(res, pathname.slice(1));
-    if (pathname === '/api/state') { res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }); return res.end(JSON.stringify(snapshot())); }
-    if (pathname === '/api/gift') { res.writeHead(200, { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }); return res.end(JSON.stringify({ ok: false, error: 'Utilise POST /api/gift pour envoyer un cadeau', state: snapshot() })); }
+    if (req.method === 'GET') {
     if (pathname === '/events') return handleSSE(req, res);
-    res.writeHead(404); return res.end('Not found');
+
+    if (pathname === '/api/state' || pathname === '/api/gift') {
+      const body = pathname === '/api/state'
+        ? snapshot()
+        : {
+            ok: false,
+            error: 'Utilise POST /api/gift pour envoyer un cadeau',
+            state: snapshot()
+          };
+
+      res.writeHead(200, {
+        'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
+      });
+      return res.end(JSON.stringify(body));
+    }
+
+    return serveFile(res, pathname === '/' ? 'index.html' : pathname.slice(1));
   }
 
   if (req.method === 'POST') {
