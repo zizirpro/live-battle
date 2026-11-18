@@ -1,0 +1,13 @@
+{
+  "name": "live-battle",
+  "version": "1.0.0",
+  "description": "Jeu de live TikTok : les cadeaux des viewers infligent des degats au boss, le top donateur devient numero 1",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {}
+}

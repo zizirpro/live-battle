@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Webhook TikTok — LIVE BATTLE</title>
+  <link rel="icon" href="/favicon.svg">
+  <style>
+    body {
+      background: #0a0a1a;
+      color: #fff;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      max-width: 700px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    h1 { color: #ff6b6b; margin-bottom: 8px; }
+    h2 { color: #4ecdc4; margin-top: 20px; border-bottom: 1px solid #3a3a66; padding-bottom: 8px; }
+    code {
+      background: #1a1a3a;
+      padding: 4px 8px;
+      border-radius: 4px;
+      color: #ffe66d;
+      font-family: 'Courier New', monospace;
+    }
+    .json-box {
+      background: #111;
+      border: 1px solid #3a3a66;
+      border-radius: 8px;
+      padding: 16px;
+      margin: 12px 0;
+      overflow-x: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .note {
+      background: #1a1a3a;
+      padding: 12px;
+      border-left: 3px solid #4ecdc4;
+      border-radius: 4px;
+      margin-top: 12px;
+    }
+    .section { margin-top: 16px; }
+    .tag {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      margin-right: 6px;
+      margin-bottom: 6px;
+    }
+    .success { background: #1a4a2a; color: #4cd137; }
+    .info { background: #1a2a4a; color: #4ecdc4; }
+  </style>
+</head>
+<body>
+  <h1>🔗 Webhook TikTok</h1>
+  <p>L'endpoint <code>POST /api/gift</code> reçoit les cadeaux envoyés pendant le live TikTok.</p>
+
+  <div class="section">
+    <h2>📦 Format de payload</h2>
+    <div class="note">
+      Les champs sont <strong>flexibles</strong> — TikTok peut envoyer différentes variantes :
+    </div>
+
+    <div class="json-box">
+      <pre>{
+  "senderNickname": "PseudoViewer",
+  "giftType": "Rocket",
+  "giftCount": 1
+}</pre>
+    </div>
+
+    <div class="section">
+      <h2>📝 Champs acceptés</h2>
+      <span class="tag info">senderNickname / senderName / sender / nickname</span>
+      <span class="tag info">giftType / giftName / gift.name</span>
+      <span class="tag info">giftCount / count / quantity</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>🎮 Correspondance cadeau → points</h2>
+    <div class="note">
+      Les valeurs sont converties automatiquement :
+    </div>
+    <div class="json-box">
+      <pre>Rose 🌹 = 1 pt
+Cœur 💕 = 5 pts
+Câlin 🤗 = 10 pts
+Panda 🐼 = 50 pts
+Rocket 🚀 = 100 pts
+Galaxie 🌌 = 250 pts
+Crown 👑 = 500 pts</pre>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>✅ Test local</h2>
+    <div class="json-box">
+      <pre>curl -X POST http://localhost:3000/api/gift \
+  -H "Content-Type: application/json" \
+  -d '{"senderNickname":"Test","giftType":"Crown","giftCount":2}'</pre>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>🌐 En production</h2>
+    <div class="note">
+      Une fois déployé, l'URL sera <code>https://TON_DOMAIN/api/gift</code>.
+      <br>Configure-la dans l'espace développeurs TikTok dans la section "Webhooks".
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>⚠️ Conditions</h2>
+    <ul>
+      <li>Le serveur doit être accessible depuis TikTok (pas de blocage réseau).</li>
+      <li>Utilise <code>GET</code> pour voir une erreur 404 (c'est normal).</li>
+      <li>Utilise <code>POST</code> pour envoyer un cadeau et déclencher les dégâts.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <a href="/" style="color: #ff6b6b; text-decoration: none;">← Retour au jeu</a>
+  </div>
+</body>
+</html>

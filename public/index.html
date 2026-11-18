@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<title>LIVE BATTLE — Jeu de cadeaux TikTok</title>
+<link rel="stylesheet" href="/style.css">
+</head>
+<body>
+<header>
+  <h1>🎁 LIVE BATTLE</h1>
+  <div id="status-badge" class="status idle">⏸ En attente</div>
+</header>
+
+<main>
+  <section id="boss-viewport">
+    <div id="boss-emoji">👹</div>
+    <div id="boss-meta">
+      <div id="boss-name">Le Troll des Badges</div>
+      <div id="hp-bar"><div id="hp-fill"></div></div>
+      <div class="hp-text"><span id="hp-current">0</span> / <span id="hp-max">0</span></div>
+    </div>
+    <div id="timer">⏱ <span id="timer-value">90</span>s</div>
+    <div id="damage-float"></div>
+  </section>
+
+  <div id="content">
+    <section id="stage">
+      <div id="stage-content"></div>
+    </section>
+    <aside id="sidebar">
+      <div class="card">
+        <h3>🏆 Classement</h3>
+        <div id="leaderboard"></div>
+      </div>
+      <div class="card">
+        <h3>💝 Feed des cadeaux</h3>
+        <div id="feed"></div>
+      </div>
+    </aside>
+  </div>
+</main>
+
+<section id="controls">
+  <button id="btn-start" class="btn-primary">▶ Démarrer le round</button>
+  <button id="btn-end" class="btn-warn">⏹ Terminer le round</button>
+  <button id="btn-ultimate" class="btn-ultimate" disabled>⚡ ULTIMATE</button>
+  <button id="btn-reset" class="btn-ghost">🔄 Reset</button>
+</section>
+
+<section id="simulator">
+  <div class="sim-title">🧪 Simulateur de cadeaux (test)</div>
+  <div id="sim-gifts" class="sim-gifts"></div>
+  <div class="sim-custom">
+    <input id="sim-sender" placeholder="Pseudo du viewer" value="TikTokViewer" />
+    <select id="sim-gift">
+      <option value="Rose">🌹 Rose</option>
+      <option value="Cœur">💕 Cœur</option>
+      <option value="Câlin">🤗 Câlin</option>
+      <option value="Panda">🐼 Panda</option>
+      <option value="Rocket">🚀 Rocket</option>
+      <option value="Galaxie">🌌 Galaxie</option>
+      <option value="Crown">👑 Crown</option>
+    </select>
+    <input id="sim-count" type="number" min="1" value="1" style="width:70px" />
+    <button id="btn-send-custom" class="btn-primary">Envoyer</button>
+  </div>
+</section>
+
+<div id="winner-overlay" class="hidden">
+  <div id="winner-overlay-content">
+    <div class="winner-emoji">🏆</div>
+    <div id="winner-title">Victoire !</div>
+    <div id="winner-name"></div>
+    <div id="champion-title"></div>
+    <button id="next-round-btn" class="btn-primary">▶ Round suivant</button>
+  </div>
+</div>
+
+<script src="/game.js"></script>
+</body>
+</html>
